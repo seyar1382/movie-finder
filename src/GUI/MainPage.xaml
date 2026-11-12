@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiTest.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+
+            <Label
+                Text="Welcome to Movie Finder"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+
+
+            <SearchBar 
+                FontSize="20"
+                Placeholder="Search for movies..."
+                WidthRequest="1000"
+                HeightRequest="30" />
+
+            <Button 
+                Text="Search"
+                SemanticProperties.Hint="Search for movies" />
+
+
+            
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
