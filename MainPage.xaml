@@ -13,15 +13,18 @@
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
 
-
-
-            <SearchBar 
+            <!-- center the search bar text and placeholder -->
+            <SearchBar
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center"
+                x:Name="searchBar" 
                 FontSize="20"
                 Placeholder="Search for movies..."
-                WidthRequest="1000"
                 HeightRequest="30" />
 
-            <Button 
+            <Button
+                x:Name="searchButton"
+                Clicked="OnSearchButtonClicked"
                 Text="Search"
                 SemanticProperties.Hint="Search for movies" />
 
