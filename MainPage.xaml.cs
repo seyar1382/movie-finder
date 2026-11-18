@@ -24,14 +24,56 @@ public partial class MainPage : ContentPage
 		// }
 	}
 
-	async Task Wrapper()
-	{
-		var movie = await client.GetMovieAsync(47964);
-		Console.WriteLine($"Movie name: {movie.Title}");
-	}
+	// async Task Wrapper()
+	// {
+	// 	var movie = await client.GetMovieAsync(47964);
+	// 	Console.WriteLine($"Movie name: {movie?.Title}");
+	// }
 
-	private async void OnSearchButtonClicked(object sender, EventArgs e)
+	// private async void OnSearchButtonClicked(object? sender, EventArgs e)
+	// {
+	// 	await Wrapper();
+	// }
+
+	private async void OnSearchClicked(object sender, EventArgs e)
 	{
-		await Wrapper();
+
+    string query = searchBar.Text;
+
+    if (string.IsNullOrWhiteSpace(query))
+      return;
+
+    try
+    {
+
+			var movies = await client.SearchMovieAsync(query);
+
+			foreach (var movie in movies?.Results ?? [])
+			{
+				Console.WriteLine($"Title: {movie.Title}");
+				Console.WriteLine($"Rating: {movie.VoteAverage}");
+				Console.WriteLine($"Overview: {movie.Overview}");
+				Console.WriteLine($"Release Date: {movie.ReleaseDate}");
+				Console.WriteLine($"Popularity: {movie.Popularity}");
+				Console.WriteLine($"Popularity: {movie.PosterPath}");
+				Console.WriteLine("-------------------");
+				movieTitle.Text = movie.Title;
+			}
+			var shows = await client.SearchTvShowAsync(query);
+
+			foreach (var show in shows?.Results ?? [])
+			{
+				Console.WriteLine($"TV SHOW: {show.Name}");
+				Console.WriteLine($"Overview: {show.Overview}");
+				Console.WriteLine($"Rating: {show.VoteAverage}");
+				Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
+				Console.WriteLine($"Popularity: {show.PosterPath}");
+				Console.WriteLine("-------------------");
+			}
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"ERROR: {ex.Message}");
+    }
 	}
 }

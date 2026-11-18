@@ -24,10 +24,12 @@
 
             <Button
                 x:Name="searchButton"
-                Clicked="OnSearchButtonClicked"
+                Clicked="OnSearchClicked"
                 Text="Search"
                 SemanticProperties.Hint="Search for movies" />
 
+            <Label
+                x:Name="movieTitle"/>
 
             
         </VerticalStackLayout>
