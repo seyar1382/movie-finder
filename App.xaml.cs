@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MauiTest.Src.Pages;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MauiTest;
 
