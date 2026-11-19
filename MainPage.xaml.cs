@@ -53,20 +53,46 @@ public partial class MainPage : ContentPage
 
 			foreach (var movie in movies?.Results ?? [])
 			{
+				
 				Border card = new Border();
 				card.StrokeThickness = 0;
+				card.StrokeShape = new RoundRectangle()
+				{
+					CornerRadius = 10
+				};
+				card.Margin = 10;
+
 
 				Label title = new Label()
 				{
 					Text = movie.Title
+				};
+				Label adult = new Label()
+				{
+					Text = movie.Adult.ToString()
+				};
+				Label overview = new Label()
+				{
+					Text = movie.Overview
 				};
 				Image thumbnail = new Image()
 				{
 					Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
 					WidthRequest = 100
 				};
+				VerticalStackLayout movieDetails = new VerticalStackLayout();
+
+
+				movieDetails.Children.Add(title);
+				movieDetails.Children.Add(adult);
+				movieDetails.Children.Add(overview);
+
+				HorizontalStackLayout horizontal = new HorizontalStackLayout();
+
+				horizontal.Children.Add(thumbnail);
+				horizontal.Children.Add(movieDetails);
 				
-				card.Content = thumbnail;
+				card.Content = horizontal;
 
 				movieResults.Children.Add(card);
 				Console.WriteLine($"Title: {movie.Title}");
