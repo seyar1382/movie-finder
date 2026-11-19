@@ -1,4 +1,6 @@
 ﻿// using RestSharp;
+using System.ComponentModel;
+using Microsoft.Maui.Controls.Shapes;
 using TMDbLib.Client;
 
 namespace MauiTest;
@@ -45,11 +47,28 @@ public partial class MainPage : ContentPage
 
     try
     {
+			
 
 			var movies = await client.SearchMovieAsync(query);
 
 			foreach (var movie in movies?.Results ?? [])
 			{
+				Border card = new Border();
+				card.StrokeThickness = 0;
+
+				Label title = new Label()
+				{
+					Text = movie.Title
+				};
+				Image thumbnail = new Image()
+				{
+					Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
+					WidthRequest = 100
+				};
+				
+				card.Content = thumbnail;
+
+				movieResults.Children.Add(card);
 				Console.WriteLine($"Title: {movie.Title}");
 				Console.WriteLine($"Rating: {movie.VoteAverage}");
 				Console.WriteLine($"Overview: {movie.Overview}");
@@ -57,7 +76,8 @@ public partial class MainPage : ContentPage
 				Console.WriteLine($"Popularity: {movie.Popularity}");
 				Console.WriteLine($"Popularity: {movie.PosterPath}");
 				Console.WriteLine("-------------------");
-				movieTitle.Text = movie.Title;
+
+				
 			}
 			var shows = await client.SearchTvShowAsync(query);
 
@@ -68,8 +88,7 @@ public partial class MainPage : ContentPage
 				Console.WriteLine($"Rating: {show.VoteAverage}");
 				Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
 				Console.WriteLine($"Popularity: {show.PosterPath}");
-				Console.WriteLine("-------------------");
-			}
+			}		
     }
     catch (Exception ex)
     {

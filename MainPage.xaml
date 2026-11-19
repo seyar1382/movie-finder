@@ -28,8 +28,9 @@
                 Text="Search"
                 SemanticProperties.Hint="Search for movies" />
 
-            <Label
-                x:Name="movieTitle"/>
+            <VerticalStackLayout
+                x:Name="movieResults">
+            </VerticalStackLayout>
 
             
         </VerticalStackLayout>
