@@ -3,7 +3,10 @@ using System.ComponentModel;
 using MauiTest.Src.Pages;
 using Microsoft.Maui.Controls.Shapes;
 using TMDbLib.Client;
-using Windows.Media.Capture.Core;
+
+
+
+
 
 namespace MauiTest;
 
@@ -42,45 +45,48 @@ public partial class MainPage : ContentPage
 
 	private async void OnSearchClicked(object sender, EventArgs e)
 	{
-    string query = searchBar.Text;
-
-    if (string.IsNullOrWhiteSpace(query))
-    	return;
-
-    try
-    {
-			
-		var movies = await client.SearchMovieAsync(query);
-
-		foreach (var movie in movies?.Results ?? [])
-		{
-			cardCreation(movie);
-
-			Console.WriteLine($"Title: {movie.Title}");
-			Console.WriteLine($"Rating: {movie.VoteAverage}");
-			Console.WriteLine($"Overview: {movie.Overview}");
-			Console.WriteLine($"Release Date: {movie.ReleaseDate}");
-			Console.WriteLine($"Popularity: {movie.Popularity}");
-			Console.WriteLine($"Popularity: {movie.PosterPath}");
-			Console.WriteLine("-------------------");
+		movieResults.Children.Clear();
 		
-		}
+    	string query = searchBar.Text;
 
-		//code for tv shows for debug purposes
-		var shows = await client.SearchTvShowAsync(query);
-		foreach (var show in shows?.Results ?? [])
-		{
-			Console.WriteLine($"TV SHOW: {show.Name}");
-			Console.WriteLine($"Overview: {show.Overview}");
-			Console.WriteLine($"Rating: {show.VoteAverage}");
-			Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
-			Console.WriteLine($"Popularity: {show.PosterPath}");
-		}		
-    }
-    catch (Exception ex)
-    {
-    	Console.WriteLine($"ERROR: {ex.Message}");
-    }
+    	if (string.IsNullOrWhiteSpace(query))
+    		return;
+
+    	try
+    	{
+			
+			var movies = await client.SearchMovieAsync(query);
+
+			foreach (var movie in movies?.Results ?? [])
+			{
+
+				cardCreation(movie);
+
+				Console.WriteLine($"Title: {movie.Title}");
+				Console.WriteLine($"Rating: {movie.VoteAverage}");
+				Console.WriteLine($"Overview: {movie.Overview}");
+				Console.WriteLine($"Release Date: {movie.ReleaseDate}");
+				Console.WriteLine($"Popularity: {movie.Popularity}");
+				Console.WriteLine($"Popularity: {movie.PosterPath}");
+				Console.WriteLine("-------------------");
+		
+			}
+
+			//code for tv shows for debug purposes
+			var shows = await client.SearchTvShowAsync(query);
+			foreach (var show in shows?.Results ?? [])
+			{
+				Console.WriteLine($"TV SHOW: {show.Name}");
+				Console.WriteLine($"Overview: {show.Overview}");
+				Console.WriteLine($"Rating: {show.VoteAverage}");
+				Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
+				Console.WriteLine($"Popularity: {show.PosterPath}");
+			}		
+    	}
+    	catch (Exception ex)
+    	{
+    		Console.WriteLine($"ERROR: {ex.Message}");
+    	}
 	}
 
 	// going to be used to make a button?
@@ -97,30 +103,60 @@ public partial class MainPage : ContentPage
 
 
 	// function used in the creation of creating the movie cards 
-	internal void cardCreation(TMDbLib.Objects.Search.SearchMovie movie)
+	internal async void cardCreation(TMDbLib.Objects.Search.SearchMovie movie)
 	{
-		Border informationCard = new Border();
 
-		//defines how the information card looks
-		informationCard.StrokeThickness = 0;
-		informationCard.StrokeShape = new RoundRectangle()
+		Console.WriteLine("card creation");
+
+		Border informationCard = new Border()
 		{
-			CornerRadius = 10
+			StrokeThickness = 0,
+			StrokeShape = new RoundRectangle()
+			{
+				CornerRadius = 10
+			},
+			Margin = 10,
+			Background = Brush.Grey,
+			Padding = 10
 		};
-		informationCard.Margin = 10;
-		//-----------
-
 
 
 		//defines all the text parts
 		Label title = new Label()
 		{
-			Text = movie.Title
+			Text = movie.Title,
+			FontSize = 24
 		};
+
+		Label rating = new Label()
+		{
+			Text = movie.VoteAverage.ToString()
+		};
+
 		Label overview = new Label()
 		{
-			Text = movie.Overview
+			Text = movie.Overview,
+			WidthRequest = 900
 		};
+
+		Border imageBorder = new Border()
+		{
+			StrokeThickness = 0,
+			StrokeShape = new RoundRectangle()
+			{
+				CornerRadius = 10
+			},
+			Margin = new Thickness(0, 0, 15, 0)
+		};
+
+		Image thumbnail = new Image()
+		{
+			Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
+			WidthRequest = 200
+		};
+
+		imageBorder.Content = thumbnail;
+
 
 
 		//creates a vertical stack
@@ -128,20 +164,37 @@ public partial class MainPage : ContentPage
 
 		//adds children to the verticall stack
 		movieDetails.Children.Add(title);
+		movieDetails.Children.Add(rating);
 		movieDetails.Children.Add(overview);
-
-		// initialize the image class and where to get them
-		Image thumbnail = new Image()
-		{
-			Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
-			WidthRequest = 100
-		};
 
 		//initialize a horizontal stack layout
 		HorizontalStackLayout horizontal = new HorizontalStackLayout();
 
+		try{
+		var providers = await client.GetMovieWatchProvidersAsync(movie.Id);
+		var ukProviders = providers?.Results?["GB"];
+
+		foreach (var provider in ukProviders?.Buy ?? [])
+		{
+			Label movieProvider = new Label()
+			{
+				Text = $"Streaming on: {provider.ProviderName}"
+				
+			};
+			movieDetails.Children.Add(movieProvider);
+		}
+		}
+		catch
+		{
+			Console.WriteLine("Error finding the service");
+		}
+
+
+
+
+
 		//adds the thumbnail to the stack with description and title next to it
-		horizontal.Children.Add(thumbnail);
+		horizontal.Children.Add(imageBorder);
 		horizontal.Children.Add(movieDetails);
 				
 		informationCard.Content = horizontal;
