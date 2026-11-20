@@ -5,9 +5,6 @@ using Microsoft.Maui.Controls.Shapes;
 using TMDbLib.Client;
 
 
-
-
-
 namespace MauiTest;
 
 public partial class MainPage : ContentPage
@@ -19,29 +16,8 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 
 		client = new TMDbClient("96b0f176afcf825ea97b650615c47a02");
-		// async Task GetMovie()
-		// {
-		// 	var options = new RestClientOptions("https://api.themoviedb.org/3/authentication");
-		// 	var client = new RestClient(options);
-		// 	var request = new RestRequest("");
-		// 	request.AddHeader("accept", "application/json");
-		// 	request.AddHeader("Authorization", "Bearer ••••");
-		// 	var response = await client.GetAsync(request);
 
-		// 	Console.WriteLine("{0}", response.Content);
-		// }
 	}
-
-	// async Task Wrapper()
-	// {
-	// 	var movie = await client.GetMovieAsync(47964);
-	// 	Console.WriteLine($"Movie name: {movie?.Title}");
-	// }
-
-	// private async void OnSearchButtonClicked(object? sender, EventArgs e)
-	// {
-	// 	await Wrapper();
-	// }
 
 	private async void OnSearchClicked(object sender, EventArgs e)
 	{
@@ -54,25 +30,18 @@ public partial class MainPage : ContentPage
 
     	try
     	{
-			
+			// Search for movies using the TMDb API
 			var movies = await client.SearchMovieAsync(query);
 
 			foreach (var movie in movies?.Results ?? [])
 			{
 
 				cardCreation(movie);
-
-				Console.WriteLine($"Title: {movie.Title}");
-				Console.WriteLine($"Rating: {movie.VoteAverage}");
-				Console.WriteLine($"Overview: {movie.Overview}");
-				Console.WriteLine($"Release Date: {movie.ReleaseDate}");
-				Console.WriteLine($"Popularity: {movie.Popularity}");
-				Console.WriteLine($"Popularity: {movie.PosterPath}");
-				Console.WriteLine("-------------------");
 		
 			}
-
+			
 			//code for tv shows for debug purposes
+			// search for TV shows using the TMDb API
 			var shows = await client.SearchTvShowAsync(query);
 			foreach (var show in shows?.Results ?? [])
 			{
@@ -110,14 +79,15 @@ public partial class MainPage : ContentPage
 
 		Border informationCard = new Border()
 		{
-			StrokeThickness = 0,
-			StrokeShape = new RoundRectangle()
-			{
-				CornerRadius = 10
-			},
-			Margin = 10,
-			Background = Brush.Grey,
-			Padding = 10
+			// StrokeThickness = 0,
+			// StrokeShape = new RoundRectangle()
+			// {
+			// 	CornerRadius = 10
+			// },
+			// Margin = 10,
+			// Background = Brush.Grey,
+			// Padding = 10,
+			Style = (Style)Application.Current.Resources["InformationCard"]
 		};
 
 
@@ -151,13 +121,12 @@ public partial class MainPage : ContentPage
 
 		Image thumbnail = new Image()
 		{
-			Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
+			// if the poster path is null, it will use a default image, currently not working?
+			Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}" ?? "../Resources/Images/[Deleted image].jpeg",
 			WidthRequest = 200
 		};
 
 		imageBorder.Content = thumbnail;
-
-
 
 		//creates a vertical stack
 		VerticalStackLayout movieDetails = new VerticalStackLayout();
@@ -179,19 +148,14 @@ public partial class MainPage : ContentPage
 			Label movieProvider = new Label()
 			{
 				Text = $"Streaming on: {provider.ProviderName}"
-				
 			};
 			movieDetails.Children.Add(movieProvider);
 		}
 		}
-		catch
+		catch (Exception ex)
 		{
-			Console.WriteLine("Error finding the service");
+			Console.WriteLine($"Error finding the service: {ex.Message}");
 		}
-
-
-
-
 
 		//adds the thumbnail to the stack with description and title next to it
 		horizontal.Children.Add(imageBorder);
@@ -202,8 +166,5 @@ public partial class MainPage : ContentPage
 		//adds the information card on the moviresults verticall stack layout
 		movieResults.Children.Add(informationCard);
 	}
-
-
-
 
 }
