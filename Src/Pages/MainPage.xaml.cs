@@ -19,7 +19,7 @@ public partial class MainPage : ContentPage
 
 	}
 
-	private async void OnSearchClicked(object sender, EventArgs e)
+	private async void OnSearchClicked(object? sender, EventArgs e)
 	{
 		movieResults.Children.Clear();
 		
