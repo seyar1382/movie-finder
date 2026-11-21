@@ -77,18 +77,9 @@ public partial class MainPage : ContentPage
 
 		Console.WriteLine("card creation");
 
-		Border informationCard = new Border()
-		{
-			// StrokeThickness = 0,
-			// StrokeShape = new RoundRectangle()
-			// {
-			// 	CornerRadius = 10
-			// },
-			// Margin = 10,
-			// Background = Brush.Grey,
-			// Padding = 10,
-			Style = (Style)Application.Current.Resources["InformationCard"]
-		};
+		Border informationCard = new Border();
+		informationCard.Style = (Style)Application.Current.Resources["InformationCard"];
+		
 
 
 		//defines all the text parts
@@ -121,9 +112,9 @@ public partial class MainPage : ContentPage
 
 		Image thumbnail = new Image()
 		{
-			// if the poster path is null, it will use a default image, currently not working?
-			Source = $"https://image.tmdb.org/t/p/w500{movie.PosterPath}" ?? "../Resources/Images/[Deleted image].jpeg",
-			WidthRequest = 200
+			// if the poster path is null, it will use a default image.
+			Source = string.IsNullOrEmpty(movie.PosterPath) ? "placeholder_image.jpeg" : $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
+			WidthRequest = 200,
 		};
 
 		imageBorder.Content = thumbnail;
