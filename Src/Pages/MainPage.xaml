@@ -18,7 +18,6 @@
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level1" />
 
-            <!-- center the search bar text and placeholder -->
             <SearchBar
                 HorizontalTextAlignment="Center"
                 VerticalTextAlignment="Center"
@@ -33,9 +32,11 @@
                 Text="Search"
                 SemanticProperties.Hint="Search for movies" />
 
-            <VerticalStackLayout
-                x:Name="movieResults">
-            </VerticalStackLayout>
+            <FlexLayout 
+                x:Name="movieResults"
+                Wrap="Wrap"
+                JustifyContent="Center">
+            </FlexLayout>
 
         </VerticalStackLayout>
     </ScrollView>
