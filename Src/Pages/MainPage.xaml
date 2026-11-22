@@ -1,19 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiTest.MainPage">
+             x:Class="MauiTest.MainPage"
+             BackgroundColor="#160e1a">
 
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
 
+            <Image 
+                Source="motv.png"
+                WidthRequest="200"/>
+
             <Label
-                Text="Welcome to Movie Finder"
-                Style="{StaticResource Headline}"
+                Text="Movies. Series. Streaming."
+                Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level1" />
 
-            <!-- center the search bar text and placeholder -->
             <SearchBar
                 HorizontalTextAlignment="Center"
                 VerticalTextAlignment="Center"
@@ -28,11 +32,12 @@
                 Text="Search"
                 SemanticProperties.Hint="Search for movies" />
 
-            <VerticalStackLayout
-                x:Name="movieResults">
-            </VerticalStackLayout>
+            <FlexLayout 
+                x:Name="movieResults"
+                Wrap="Wrap"
+                JustifyContent="Center">
+            </FlexLayout>
 
-            
         </VerticalStackLayout>
     </ScrollView>
 

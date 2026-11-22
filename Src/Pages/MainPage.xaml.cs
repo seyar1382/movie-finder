@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using MauiTest.Src.Pages;
 using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Maui.Layouts;
 using TMDbLib.Client;
 
 
@@ -19,7 +20,7 @@ public partial class MainPage : ContentPage
 
 	}
 
-	private async void OnSearchClicked(object sender, EventArgs e)
+	private async void OnSearchClicked(object? sender, EventArgs e)
 	{
 		movieResults.Children.Clear();
 		
@@ -75,12 +76,12 @@ public partial class MainPage : ContentPage
 	internal async void cardCreation(TMDbLib.Objects.Search.SearchMovie movie)
 	{
 
-		Console.WriteLine("card creation");
-
 		Border informationCard = new Border();
 		informationCard.Style = (Style)Application.Current.Resources["InformationCard"];
-		
 
+		// sets the size the information cards, and taking the available space
+		FlexLayout.SetBasis(informationCard, 600);
+		FlexLayout.SetGrow(informationCard, 1);
 
 		//defines all the text parts
 		Label title = new Label()
@@ -97,38 +98,55 @@ public partial class MainPage : ContentPage
 		Label overview = new Label()
 		{
 			Text = movie.Overview,
-			WidthRequest = 900
+			LineBreakMode = LineBreakMode.WordWrap,
+			HorizontalOptions = LayoutOptions.Fill
 		};
 
-		Border imageBorder = new Border()
-		{
-			StrokeThickness = 0,
-			StrokeShape = new RoundRectangle()
-			{
-				CornerRadius = 10
-			},
-			Margin = new Thickness(0, 0, 15, 0)
-		};
+		Border imageBorder = new Border();
+		imageBorder.Style = (Style)Application.Current.Resources["ImageBorder"];
 
 		Image thumbnail = new Image()
 		{
 			// if the poster path is null, it will use a default image.
 			Source = string.IsNullOrEmpty(movie.PosterPath) ? "placeholder_image.jpeg" : $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
 			WidthRequest = 200,
+			Aspect = Aspect.Fill
 		};
 
 		imageBorder.Content = thumbnail;
 
 		//creates a vertical stack
 		VerticalStackLayout movieDetails = new VerticalStackLayout();
+		movieDetails.HorizontalOptions = LayoutOptions.Fill;
 
 		//adds children to the verticall stack
 		movieDetails.Children.Add(title);
 		movieDetails.Children.Add(rating);
 		movieDetails.Children.Add(overview);
 
-		//initialize a horizontal stack layout
-		HorizontalStackLayout horizontal = new HorizontalStackLayout();
+		//initialize a Grid layout
+		Grid content = new Grid
+		{
+			ColumnDefinitions =
+			{
+				new ColumnDefinition {Width = 220},
+				new ColumnDefinition {Width = GridLength.Star}
+			}
+		};
+
+		// applying hover effect. the grid changes colour when the pointer hovers over it.
+		PointerGestureRecognizer pointer = new PointerGestureRecognizer();
+		pointer.PointerEntered += (sender, e) =>
+		{
+			content.BackgroundColor = Color.FromArgb("#FF35213E");
+		};
+
+		pointer.PointerExited += (sender, e) =>
+		{
+			content.BackgroundColor = Color.FromArgb("#FF27192E");
+		};
+
+		content.GestureRecognizers.Add(pointer);
 
 		try{
 		var providers = await client.GetMovieWatchProvidersAsync(movie.Id);
@@ -148,13 +166,13 @@ public partial class MainPage : ContentPage
 			Console.WriteLine($"Error finding the service: {ex.Message}");
 		}
 
-		//adds the thumbnail to the stack with description and title next to it
-		horizontal.Children.Add(imageBorder);
-		horizontal.Children.Add(movieDetails);
+		//adds the thumbnail to the grid with details next to it
+		content.Add(imageBorder, 0, 0);
+		content.Add(movieDetails, 1, 0);
 				
-		informationCard.Content = horizontal;
+		informationCard.Content = content;
 
-		//adds the information card on the moviresults verticall stack layout
+		//adds the information card on the movieresults flexlayout
 		movieResults.Children.Add(informationCard);
 	}
 
