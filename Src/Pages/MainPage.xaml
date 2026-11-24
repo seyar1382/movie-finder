@@ -8,8 +8,8 @@
             Padding="30,0"
             Spacing="25">
 
-            <Image 
-                Source="motv.png"
+            <Image
+                x:Name="motvLogo"
                 WidthRequest="200"/>
 
             <Label

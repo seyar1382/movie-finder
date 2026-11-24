@@ -1,6 +1,7 @@
 ﻿// using RestSharp;
 using System.ComponentModel;
 using MauiTest.Src.Pages;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
 using TMDbLib.Client;
@@ -18,6 +19,7 @@ public partial class MainPage : ContentPage
 
 		client = new TMDbClient("96b0f176afcf825ea97b650615c47a02");
 
+		motvLogo.Source = Application.Current.RequestedTheme == AppTheme.Dark ? "motv.png" : "logo_light.svg";
 	}
 
 	private async void OnSearchClicked(object? sender, EventArgs e)
