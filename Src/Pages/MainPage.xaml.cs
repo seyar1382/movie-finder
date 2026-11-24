@@ -138,12 +138,20 @@ public partial class MainPage : ContentPage
 		PointerGestureRecognizer pointer = new PointerGestureRecognizer();
 		pointer.PointerEntered += (sender, e) =>
 		{
-			content.BackgroundColor = Color.FromArgb("#FF35213E");
+			// content.BackgroundColor = Color.FromArgb("#FF35213E");
+			content.BackgroundColor = 
+				Application.Current.RequestedTheme == AppTheme.Dark 
+				? (Color)Application.Current.Resources["HoverDark"] 
+				: (Color)Application.Current.Resources["HoverLight"];
 		};
 
 		pointer.PointerExited += (sender, e) =>
 		{
-			content.BackgroundColor = Color.FromArgb("#FF27192E");
+			// content.BackgroundColor = Color.FromArgb("#FF27192E");
+			content.BackgroundColor =
+				Application.Current.RequestedTheme == AppTheme.Dark 
+				? (Color)Application.Current.Resources["Gray600"] 
+				: (Color)Application.Current.Resources["CardLight"];
 		};
 
 		content.GestureRecognizers.Add(pointer);
