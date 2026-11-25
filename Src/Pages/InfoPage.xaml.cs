@@ -6,4 +6,15 @@ public partial class InfoPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+	private void BackClick(object? sender, EventArgs e)
+	{
+		Navigation.PopModalAsync();
+	}
+
+	private void InfoPageBuilderMovie()
+	{
+		
+	}
+
 }

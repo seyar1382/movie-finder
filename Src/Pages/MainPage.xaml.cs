@@ -24,6 +24,8 @@ public partial class MainPage : ContentPage
 
 	private async void OnSearchClicked(object? sender, EventArgs e)
 	{
+		infoPageLoad("test");
+
 		movieResults.Children.Clear();
 		
     	string query = searchBar.Text;
@@ -70,7 +72,7 @@ public partial class MainPage : ContentPage
 	// function used internally to load info page
 	internal void infoPageLoad(string movieName)
 	{
-		Navigation.PushModalAsync(new InfoPage(movieName));
+		Navigation.PushModalAsync(new MauiTest.Src.Pages.InfoPage(movieName));
 	}
 
 
@@ -120,6 +122,7 @@ public partial class MainPage : ContentPage
 		//creates a vertical stack
 		VerticalStackLayout movieDetails = new VerticalStackLayout();
 		movieDetails.HorizontalOptions = LayoutOptions.Fill;
+
 
 		//adds children to the verticall stack
 		movieDetails.Children.Add(title);
@@ -183,6 +186,7 @@ public partial class MainPage : ContentPage
 		informationCard.Content = content;
 
 		//adds the information card on the movieresults flexlayout
+
 		movieResults.Children.Add(informationCard);
 	}
 
