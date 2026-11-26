@@ -33,27 +33,33 @@ public partial class MainPage : ContentPage
 
     	try
     	{
-			// Search for movies using the TMDb API
-			var movies = await client.SearchMovieAsync(query);
 
-			foreach (var movie in movies?.Results ?? [])
-			{
+				if (searchType == "Movies")
+				{
+					
+				}
+				// Search for movies using the TMDb API
+				var movies = await client.SearchMovieAsync(query);
 
-				cardCreation(movie);
-		
-			}
+				foreach (var movie in movies?.Results ?? [])
+				{
+
+					cardCreation(movie);
 			
-			//code for tv shows for debug purposes
-			// search for TV shows using the TMDb API
-			var shows = await client.SearchTvShowAsync(query);
-			foreach (var show in shows?.Results ?? [])
-			{
-				Console.WriteLine($"TV SHOW: {show.Name}");
-				Console.WriteLine($"Overview: {show.Overview}");
-				Console.WriteLine($"Rating: {show.VoteAverage}");
-				Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
-				Console.WriteLine($"Popularity: {show.PosterPath}");
-			}		
+				}
+				
+				//code for tv shows for debug purposes
+				// search for TV shows using the TMDb API
+				var shows = await client.SearchTvShowAsync(query);
+				foreach (var show in shows?.Results ?? [])
+				{
+					// cardCreation(show);
+					Console.WriteLine($"TV SHOW: {show.Name}");
+					Console.WriteLine($"Overview: {show.Overview}");
+					Console.WriteLine($"Rating: {show.VoteAverage}");
+					Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
+					Console.WriteLine($"Popularity: {show.PosterPath}");
+				}		
     	}
     	catch (Exception ex)
     	{
@@ -71,6 +77,22 @@ public partial class MainPage : ContentPage
 	internal void infoPageLoad(string movieName)
 	{
 		Navigation.PushModalAsync(new InfoPage(movieName));
+	}
+
+	private string searchType = "Movies";
+	
+	private void OnShowsTabClicked(object sender, EventArgs e)
+	{
+		searchType = "TV Shows";
+		showTab.BackgroundColor = Colors.Gray;
+		movieTab.BackgroundColor = Colors.Black;
+	}
+
+	private void OnMoviesTabClicked(object sender, EventArgs e)
+	{
+		searchType = "TV Shows";
+		showTab.BackgroundColor = Colors.Black;
+		movieTab.BackgroundColor = Colors.Gray;
 	}
 
 
@@ -119,6 +141,7 @@ public partial class MainPage : ContentPage
 
 		//creates a vertical stack
 		VerticalStackLayout movieDetails = new VerticalStackLayout();
+		movieDetails.MaximumWidthRequest = 360; // do not touch this
 		movieDetails.HorizontalOptions = LayoutOptions.Fill;
 
 		//adds children to the verticall stack

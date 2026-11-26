@@ -31,13 +31,31 @@
                 Text="Search"
                 SemanticProperties.Hint="Search for movies" />
 
+            <FlexLayout                
+                FlexLayout.AlignSelf="Center"
+                JustifyContent="Center">
+                <Button
+                    x:Name="movieTab" 
+                    Text="Movies"
+                    FlexLayout.Grow="1"
+                    BackgroundColor="#FF5F2D78"
+                    Margin="0,0,5,0"
+                    Clicked="OnMoviesTabClicked"/>
+                <Button 
+                    x:Name="showTab" 
+                    Text="TV Shows"
+                    FlexLayout.Grow="1"
+                    BackgroundColor="#FF362141"
+                    Clicked="OnShowsTabClicked"/>
+            </FlexLayout>
+
             <FlexLayout 
                 x:Name="movieResults"
                 Wrap="Wrap"
-                JustifyContent="Center">
-            </FlexLayout>
+                JustifyContent="Center"
+                AlignItems="Stretch"/>
 
         </VerticalStackLayout>
-    </ScrollView>
 
+    </ScrollView>
 </ContentPage>
