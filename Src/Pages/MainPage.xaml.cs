@@ -36,30 +36,29 @@ public partial class MainPage : ContentPage
 
 				if (searchType == "Movies")
 				{
-					
+					// Search for movies using the TMDb API
+					var movies = await client.SearchMovieAsync(query);
+
+					foreach (var movie in movies?.Results ?? [])
+					{
+
+						cardCreation(movie, null);
+				
+					}
 				}
-				// Search for movies using the TMDb API
-				var movies = await client.SearchMovieAsync(query);
-
-				foreach (var movie in movies?.Results ?? [])
+				else
 				{
-
-					cardCreation(movie);
-			
+					//code for tv shows for debug purposes
+					// search for TV shows using the TMDb API
+					var shows = await client.SearchTvShowAsync(query);
+					foreach (var show in shows?.Results ?? [])
+					{
+						cardCreation(null, show);
+					}	
 				}
 				
-				//code for tv shows for debug purposes
-				// search for TV shows using the TMDb API
-				var shows = await client.SearchTvShowAsync(query);
-				foreach (var show in shows?.Results ?? [])
-				{
-					// cardCreation(show);
-					Console.WriteLine($"TV SHOW: {show.Name}");
-					Console.WriteLine($"Overview: {show.Overview}");
-					Console.WriteLine($"Rating: {show.VoteAverage}");
-					Console.WriteLine($"Origianl Language: {show.OriginalLanguage}");
-					Console.WriteLine($"Popularity: {show.PosterPath}");
-				}		
+				
+					
     	}
     	catch (Exception ex)
     	{
@@ -84,21 +83,42 @@ public partial class MainPage : ContentPage
 	private void OnShowsTabClicked(object sender, EventArgs e)
 	{
 		searchType = "TV Shows";
-		showTab.BackgroundColor = Colors.Gray;
-		movieTab.BackgroundColor = Colors.Black;
+		showTab.BackgroundColor = (Color)Application.Current.Resources["Secondary"];
+		movieTab.BackgroundColor = (Color)Application.Current.Resources["HoverDark"];
 	}
 
 	private void OnMoviesTabClicked(object sender, EventArgs e)
 	{
-		searchType = "TV Shows";
-		showTab.BackgroundColor = Colors.Black;
-		movieTab.BackgroundColor = Colors.Gray;
+		searchType = "Movies";
+		showTab.BackgroundColor = (Color)Application.Current.Resources["HoverDark"];
+		movieTab.BackgroundColor = (Color)Application.Current.Resources["Secondary"];
 	}
 
 
 	// function used in the creation of creating the movie cards 
-	internal async void cardCreation(TMDbLib.Objects.Search.SearchMovie movie)
+	internal async void cardCreation(TMDbLib.Objects.Search.SearchMovie movie, TMDbLib.Objects.Search.SearchTv show)
 	{
+		String titleName;
+		String rating;
+		String overview;
+		String posterPath;
+
+		if (movie !=null)
+		{
+			titleName = movie.Title;
+			rating = movie.VoteAverage.ToString("F1");
+			overview = movie.Overview;
+			posterPath = movie.PosterPath;
+		}
+		else
+		{
+			titleName = show.Name;
+			rating = show.VoteAverage.ToString("F1");
+			overview = show.Overview;
+			posterPath = show.PosterPath;
+		}
+
+		
 
 		Border informationCard = new Border();
 		informationCard.Style = (Style)Application.Current.Resources["InformationCard"];
@@ -110,18 +130,18 @@ public partial class MainPage : ContentPage
 		//defines all the text parts
 		Label title = new Label()
 		{
-			Text = movie.Title,
+			Text = titleName,
 			FontSize = 24
 		};
 
-		Label rating = new Label()
+		Label ratingLabel = new Label()
 		{
-			Text = movie.VoteAverage.ToString()
+			Text = rating
 		};
 
-		Label overview = new Label()
+		Label overviewLabel = new Label()
 		{
-			Text = movie.Overview,
+			Text = overview,
 			LineBreakMode = LineBreakMode.WordWrap,
 			HorizontalOptions = LayoutOptions.Fill
 		};
@@ -132,7 +152,7 @@ public partial class MainPage : ContentPage
 		Image thumbnail = new Image()
 		{
 			// if the poster path is null, it will use a default image.
-			Source = string.IsNullOrEmpty(movie.PosterPath) ? "placeholder_image.jpeg" : $"https://image.tmdb.org/t/p/w500{movie.PosterPath}",
+			Source = string.IsNullOrEmpty(posterPath) ? "placeholder_image.jpeg" : $"https://image.tmdb.org/t/p/w500{posterPath}",
 			WidthRequest = 200,
 			Aspect = Aspect.Fill
 		};
@@ -146,8 +166,8 @@ public partial class MainPage : ContentPage
 
 		//adds children to the verticall stack
 		movieDetails.Children.Add(title);
-		movieDetails.Children.Add(rating);
-		movieDetails.Children.Add(overview);
+		movieDetails.Children.Add(ratingLabel);
+		movieDetails.Children.Add(overviewLabel);
 
 		//initialize a Grid layout
 		Grid content = new Grid
@@ -157,6 +177,12 @@ public partial class MainPage : ContentPage
 				new ColumnDefinition {Width = 220},
 				new ColumnDefinition {Width = GridLength.Star}
 			}
+		};
+
+		TapGestureRecognizer infoPage = new TapGestureRecognizer();
+		infoPage.Tapped += (sender, e) =>
+		{
+			infoPageLoad(movie.Title);
 		};
 
 		// applying hover effect. the grid changes colour when the pointer hovers over it.
@@ -179,6 +205,7 @@ public partial class MainPage : ContentPage
 				: (Color)Application.Current.Resources["CardLight"];
 		};
 
+		content.GestureRecognizers.Add(infoPage);
 		content.GestureRecognizers.Add(pointer);
 
 		try{
