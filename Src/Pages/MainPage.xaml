@@ -3,59 +3,71 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiTest.MainPage"> 
 
-    <ScrollView>
-        <VerticalStackLayout
+    <!-- changed the verticalStack to grid and moved the scrollView to results only -->
+    <!-- scrollview as a child needs a specific height determined by row definition in grid -->
+    <Grid
+        RowDefinitions="Auto, Auto, Auto, Auto, Auto, *"
+        RowSpacing="20"
+        Padding="30,0">
+        <!-- <VerticalStackLayout
             Padding="30,0"
-            Spacing="25">
+            Spacing="25"> -->
 
-            <Image
-                x:Name="motvLogo"
-                WidthRequest="200"/>
+        <Image
+            Grid.Row="0"
+            x:Name="motvLogo"
+            WidthRequest="200"/>
 
-            <Label
-                Text="Movies. Series. Streaming."
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level1" />
+        <Label
+            Grid.Row="1"
+            Text="Movies. Series. Streaming."
+            Style="{StaticResource SubHeadline}"
+            SemanticProperties.HeadingLevel="Level2" />
 
-            <SearchBar
-                HorizontalTextAlignment="Center"
-                VerticalTextAlignment="Center"
-                x:Name="searchBar" 
-                FontSize="20"
-                Placeholder="Search for movies..."
-                HeightRequest="30" />
+        <SearchBar
+            Grid.Row="2"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center"
+            x:Name="searchBar" 
+            FontSize="20"
+            Placeholder="Search for movies..."
+            HeightRequest="30" />
 
+        <Button
+            Grid.Row="3"
+            x:Name="searchButton"
+            Clicked="OnSearchClicked"
+            Text="Search"
+            SemanticProperties.Hint="Search for movies" />
+
+        <FlexLayout
+            Grid.Row="4"             
+            FlexLayout.AlignSelf="Center"
+            JustifyContent="Center">
             <Button
-                x:Name="searchButton"
-                Clicked="OnSearchClicked"
-                Text="Search"
-                SemanticProperties.Hint="Search for movies" />
+                x:Name="movieTab" 
+                Text="Movies"
+                FlexLayout.Grow="1"
+                BackgroundColor="{StaticResource Secondary}"
+                Margin="0,0,5,0"
+                Clicked="OnMoviesTabClicked"/>
+            <Button 
+                x:Name="showTab" 
+                Text="TV Shows"
+                FlexLayout.Grow="1"
+                BackgroundColor="{StaticResource HoverDark}"
+                Clicked="OnShowsTabClicked"/>
+        </FlexLayout>
 
-            <FlexLayout                
-                FlexLayout.AlignSelf="Center"
-                JustifyContent="Center">
-                <Button
-                    x:Name="movieTab" 
-                    Text="Movies"
-                    FlexLayout.Grow="1"
-                    BackgroundColor="{StaticResource Secondary}"
-                    Margin="0,0,5,0"
-                    Clicked="OnMoviesTabClicked"/>
-                <Button 
-                    x:Name="showTab" 
-                    Text="TV Shows"
-                    FlexLayout.Grow="1"
-                    BackgroundColor="{StaticResource HoverDark}"
-                    Clicked="OnShowsTabClicked"/>
-            </FlexLayout>
-
+        <ScrollView Grid.Row="5">
             <FlexLayout 
                 x:Name="movieResults"
                 Wrap="Wrap"
                 JustifyContent="Center"
                 AlignItems="Stretch"/>
+        </ScrollView>
 
-        </VerticalStackLayout>
+        <!-- </VerticalStackLayout> -->
 
-    </ScrollView>
+    </Grid>
 </ContentPage>
