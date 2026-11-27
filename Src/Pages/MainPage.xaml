@@ -38,14 +38,14 @@
                     x:Name="movieTab" 
                     Text="Movies"
                     FlexLayout.Grow="1"
-                    BackgroundColor="#FF5F2D78"
+                    BackgroundColor="{StaticResource Secondary}"
                     Margin="0,0,5,0"
                     Clicked="OnMoviesTabClicked"/>
                 <Button 
                     x:Name="showTab" 
                     Text="TV Shows"
                     FlexLayout.Grow="1"
-                    BackgroundColor="#FF362141"
+                    BackgroundColor="{StaticResource HoverDark}"
                     Clicked="OnShowsTabClicked"/>
             </FlexLayout>
 
